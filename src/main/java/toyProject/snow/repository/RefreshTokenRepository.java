@@ -6,7 +6,7 @@ import toyProject.snow.entity.RefreshTokenEntity;
 
 public interface RefreshTokenRepository extends JpaRepository<RefreshTokenEntity, Long> {
 
-    Boolean existByRefreshToken(String refreshToken);
+    Boolean existsByRefreshToken(String refreshToken);
 
     @Transactional
     void deleteByRefreshToken(String refresh);

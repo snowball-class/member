@@ -10,6 +10,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import toyProject.snow.jwt.CustomLogoutFilter;
 import toyProject.snow.jwt.JWTUtil;
 import toyProject.snow.jwt.LoginFilter;
 import toyProject.snow.repository.RefreshTokenRepository;
@@ -71,6 +72,10 @@ public class SecurityConfig {
         // 커스터마이징한 loginFilter 추가
         http
                 .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil, refreshTokenRepository), UsernamePasswordAuthenticationFilter.class);
+
+        // 커스터마이징한 logoutFilter 추가
+        http
+                .addFilterBefore(new CustomLogoutFilter(jwtUtil, refreshTokenRepository), LoginFilter.class);
 
         //세션 설정 : jwt 방식에서는 세션이 항상 stateless로 설정, 가장 중요
         http

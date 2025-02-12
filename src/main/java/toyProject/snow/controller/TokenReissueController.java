@@ -64,7 +64,7 @@ public class TokenReissueController {
         }
 
         // refresh 토큰 DB에 저장되어 있는지 확인
-        Boolean isExist = refreshTokenRepository.existByRefreshToken(refreshToken);
+        Boolean isExist = refreshTokenRepository.existsByRefreshToken(refreshToken);
         if(!isExist){
             return new ResponseEntity<>("invalid refresh token", HttpStatus.BAD_REQUEST);
         }
