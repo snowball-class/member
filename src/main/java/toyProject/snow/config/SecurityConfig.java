@@ -12,6 +12,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import toyProject.snow.jwt.JWTUtil;
 import toyProject.snow.jwt.LoginFilter;
+import toyProject.snow.repository.RefreshTokenRepository;
 
 //스프링부트에 configuration인 것 등록 @Configuration
 //security 라는 config라는 것 @EnableWebSecurity
@@ -19,15 +20,17 @@ import toyProject.snow.jwt.LoginFilter;
 
 @Configuration
 @EnableWebSecurity
-public class SecurityConfiguration {
+public class SecurityConfig {
 
     //AuthenticationManager가 인자로 받을 AuthenticationConfiguraion 객체 생성자 주입
     private final AuthenticationConfiguration authenticationConfiguration;
     private final JWTUtil jwtUtil;
+    private final RefreshTokenRepository refreshTokenRepository;
 
-    public SecurityConfiguration(AuthenticationConfiguration authenticationConfiguration, JWTUtil jwtUtil){
+    public SecurityConfig(AuthenticationConfiguration authenticationConfiguration, JWTUtil jwtUtil, RefreshTokenRepository refreshTokenRepository){
         this.authenticationConfiguration = authenticationConfiguration;
         this.jwtUtil = jwtUtil;
+        this.refreshTokenRepository = refreshTokenRepository;
     }
 
     // authentication을 가져오는 manager을 빈으로 등록
@@ -67,7 +70,7 @@ public class SecurityConfiguration {
 
         // 커스터마이징한 loginFilter 추가
         http
-                .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil), UsernamePasswordAuthenticationFilter.class);
+                .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil, refreshTokenRepository), UsernamePasswordAuthenticationFilter.class);
 
         //세션 설정 : jwt 방식에서는 세션이 항상 stateless로 설정, 가장 중요
         http

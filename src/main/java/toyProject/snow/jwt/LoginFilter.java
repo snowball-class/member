@@ -13,8 +13,11 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import toyProject.snow.dto.CustomMemberDetails;
+import toyProject.snow.entity.RefreshTokenEntity;
+import toyProject.snow.repository.RefreshTokenRepository;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.Iterator;
 
 public class LoginFilter extends UsernamePasswordAuthenticationFilter {
@@ -22,9 +25,12 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     private final AuthenticationManager authenticationManager;
     private final JWTUtil jwtUtil;
 
-    public LoginFilter(AuthenticationManager authenticationManager, JWTUtil jwtUtil){
+    private RefreshTokenRepository refreshTokenRepository;
+
+    public LoginFilter(AuthenticationManager authenticationManager, JWTUtil jwtUtil, RefreshTokenRepository refreshTokenRepository){
         this.authenticationManager = authenticationManager;
         this.jwtUtil = jwtUtil;
+        this.refreshTokenRepository = refreshTokenRepository;
     }
 
     @Override
@@ -55,12 +61,15 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         String memberType = auth.getAuthority();
 
         // 토큰 생성
-        String access = jwtUtil.createJwt("access", email, memberType, 6000000L);
-        String refresh = jwtUtil.createJwt("refresh", email, memberType, 86400000L);
+        String accessToken = jwtUtil.createJwt("access", email, memberType, 6000000L);
+        String refreshToken = jwtUtil.createJwt("refresh", email, memberType, 86400000L);
+
+        // refresh 토큰 DB 저장
+        saveRefreshTokenEntity(email, refreshToken, 86400000L);
 
         // 응답 생성
-        response.setHeader("access", access);
-        response.addCookie(createCookies("refresh", refresh));
+        response.setHeader("access", accessToken);
+        response.addCookie(createCookies("refresh", refreshToken));
         response.setStatus(HttpStatus.OK.value());
 
 //        단일토큰만 발급
@@ -76,6 +85,18 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 //
 //        response.addHeader("Authorization", "Bearer " + token);
 
+    }
+
+    private void saveRefreshTokenEntity(String email, String refreshToken, Long expiredMs){
+
+        Date date = new Date(System.currentTimeMillis() + expiredMs);
+
+        RefreshTokenEntity refreshTokenEntity = new RefreshTokenEntity();
+        refreshTokenEntity.setEmail(email);
+        refreshTokenEntity.setRefreshToken(refreshToken);
+        refreshTokenEntity.setExpirationTime(date.toString());
+
+        refreshTokenRepository.save(refreshTokenEntity);
     }
 
     //로그인 실패시 실행하는 메소드
@@ -95,4 +116,5 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
         return cookie;
     }
+
 }
