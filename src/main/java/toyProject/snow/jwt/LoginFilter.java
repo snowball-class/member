@@ -1,9 +1,11 @@
 package toyProject.snow.jwt;
 
 import jakarta.servlet.FilterChain;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -44,17 +46,35 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication){
 
-        CustomMemberDetails customMemberDetails = (CustomMemberDetails) authentication.getPrincipal();
-        String email = customMemberDetails.getUsername();
+        // 유저 정보
+        String email = authentication.getName();
 
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
         GrantedAuthority auth = iterator.next();
-
         String memberType = auth.getAuthority();
-        String token = jwtUtil.createJwt(email, memberType, 60*60*10L);
 
-        response.addHeader("Authorization", "Bearer " + token);
+        // 토큰 생성
+        String access = jwtUtil.createJwt("access", email, memberType, 6000000L);
+        String refresh = jwtUtil.createJwt("refresh", email, memberType, 86400000L);
+
+        // 응답 생성
+        response.setHeader("access", access);
+        response.addCookie(createCookies("refresh", refresh));
+        response.setStatus(HttpStatus.OK.value());
+
+//        단일토큰만 발급
+//        CustomMemberDetails customMemberDetails = (CustomMemberDetails) authentication.getPrincipal();
+//        String email = customMemberDetails.getUsername();
+//
+//        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
+//        Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
+//        GrantedAuthority auth = iterator.next();
+//
+//        String memberType = auth.getAuthority();
+//        String token = jwtUtil.createJwt(email, memberType, 60*60*10L);
+//
+//        response.addHeader("Authorization", "Bearer " + token);
 
     }
 
@@ -62,5 +82,17 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) {
         response.setStatus(401);
+    }
+
+
+    private Cookie createCookies(String key, String value) {
+
+        Cookie cookie = new Cookie(key, value);
+        cookie.setMaxAge(24*60*60);
+//        cookie.setSecure(true); // https 통신 쓸 때
+//        cookie.setPath("/"); // 쿠키 접근 범위
+        cookie.setHttpOnly(true);
+
+        return cookie;
     }
 }

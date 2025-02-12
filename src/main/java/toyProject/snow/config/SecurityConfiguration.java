@@ -62,6 +62,7 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests((auth) -> auth
                         .requestMatchers("/login", "/", "join").permitAll()
                         .requestMatchers("/admin").hasRole("ADMIN")
+                        .requestMatchers("/reissue").permitAll()
                         .anyRequest().authenticated());
 
         // 커스터마이징한 loginFilter 추가
@@ -79,3 +80,4 @@ public class SecurityConfiguration {
 
 // jwt 발급 전에 회원정보를 검증해서 jwt를 발급해야
 // 회원정보를 검증하기 위해서는 id, pw 매치(유저입력-DB) 확인
+
