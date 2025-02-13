@@ -19,7 +19,11 @@ public class JWTUtil {
         this.secretKey = new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8), Jwts.SIG.HS512.key().build().getAlgorithm());
     }
     
-    // 검증 진행 메소드 3개
+    // 검증 진행 메소드 4개
+    public String getMemberUUID(String token){
+        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("memberUUID", String.class);
+    }
+
     public String getEmail(String token){
         return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("email", String.class);
     }
@@ -38,9 +42,10 @@ public class JWTUtil {
     }
     
     // 토큰 생성 : 로그인 성공 시 토큰 생성해서 응답
-    public String createJwt(String tokenType, String email, String memberType, Long expiredMs){
+    public String createJwt(String tokenType, String memberUUID, String email, String memberType, Long expiredMs){
         return Jwts.builder()
                 .claim("tokenType", tokenType)
+                .claim("memberUUID", memberUUID)
                 .claim("email", email)
                 .claim("memberType", memberType)
                 .issuedAt(new Date(System.currentTimeMillis())) // 현재 발행 시간

@@ -19,6 +19,7 @@ import toyProject.snow.repository.RefreshTokenRepository;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.UUID;
 
 public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
@@ -27,7 +28,9 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
     private RefreshTokenRepository refreshTokenRepository;
 
-    public LoginFilter(AuthenticationManager authenticationManager, JWTUtil jwtUtil, RefreshTokenRepository refreshTokenRepository){
+
+    public LoginFilter(AuthenticationManager authenticationManager, JWTUtil jwtUtil,
+                       RefreshTokenRepository refreshTokenRepository){
         this.authenticationManager = authenticationManager;
         this.jwtUtil = jwtUtil;
         this.refreshTokenRepository = refreshTokenRepository;
@@ -55,17 +58,20 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         // 유저 정보
         String email = authentication.getName();
 
+        CustomMemberDetails userDetails = (CustomMemberDetails) authentication.getPrincipal();
+        String memberUUID = userDetails.getMemberUUID().toString();
+
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
         GrantedAuthority auth = iterator.next();
         String memberType = auth.getAuthority();
 
         // 토큰 생성
-        String accessToken = jwtUtil.createJwt("access", email, memberType, 6000000L);
-        String refreshToken = jwtUtil.createJwt("refresh", email, memberType, 86400000L);
+        String accessToken = jwtUtil.createJwt("access", memberUUID, email, memberType, 6000000L);
+        String refreshToken = jwtUtil.createJwt("refresh", memberUUID, email, memberType, 86400000L);
 
         // refresh 토큰 DB 저장
-        saveRefreshTokenEntity(email, refreshToken, 86400000L);
+        saveRefreshTokenEntity(memberUUID, refreshToken, 86400000L);
 
         // 응답 생성
         response.setHeader("access", accessToken);
@@ -87,12 +93,12 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
     }
 
-    private void saveRefreshTokenEntity(String email, String refreshToken, Long expiredMs){
+    private void saveRefreshTokenEntity(String memberUUID, String refreshToken, Long expiredMs){
 
         Date date = new Date(System.currentTimeMillis() + expiredMs);
 
         RefreshTokenEntity refreshTokenEntity = new RefreshTokenEntity();
-        refreshTokenEntity.setEmail(email);
+        refreshTokenEntity.setMemberUUID(UUID.fromString(memberUUID));
         refreshTokenEntity.setRefreshToken(refreshToken);
         refreshTokenEntity.setExpirationTime(date.toString());
 

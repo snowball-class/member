@@ -6,6 +6,7 @@ import toyProject.snow.entity.MemberEntity;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.UUID;
 
 public class CustomMemberDetails implements UserDetails {
 
@@ -39,6 +40,10 @@ public class CustomMemberDetails implements UserDetails {
     @Override
     public String getUsername() {
         return memberEntity.getEmail();
+    }
+
+    public UUID getMemberUUID(){
+        return memberEntity.getMemberUUID();
     }
 
     @Override

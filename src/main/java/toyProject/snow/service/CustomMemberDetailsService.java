@@ -20,10 +20,10 @@ public class CustomMemberDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 
-        MemberEntity memberData = memberRepository.findByEmail(email);
+        MemberEntity memberEntity = memberRepository.findByEmail(email);
 
-        if(memberData != null){
-            return new CustomMemberDetails(memberData);
+        if(memberEntity != null){
+            return new CustomMemberDetails(memberEntity);
         }
 
         return null;

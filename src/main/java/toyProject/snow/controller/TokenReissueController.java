@@ -14,6 +14,7 @@ import toyProject.snow.jwt.JWTUtil;
 import toyProject.snow.repository.RefreshTokenRepository;
 
 import java.util.Date;
+import java.util.UUID;
 
 
 // 리팩토링 필요! 1. 로직 서비스단으로 빼기, 2. 전역 exception 만들기 3. refresh rotate 부분 빼기 4. Cookie 만드는 부분...
@@ -70,28 +71,29 @@ public class TokenReissueController {
         }
 
         // 페이로드에 넣어서 토큰 반환
+        String memberUUID = jwtUtil.getMemberUUID(refreshToken);
         String email = jwtUtil.getEmail(refreshToken);
         String memberType = jwtUtil.getMemberType(refreshToken);
         
-        String newAccessToken = jwtUtil.createJwt("access", email, memberType, 6000000L);
-        String newRefreshToken = jwtUtil.createJwt("refresh", email, memberType, 864000000L);
+        String newAccessToken = jwtUtil.createJwt("access", memberUUID, email, memberType, 6000000L);
+        String newRefreshToken = jwtUtil.createJwt("refresh", memberUUID, email, memberType, 864000000L);
         
         response.setHeader("access", newAccessToken);
         response.addCookie(createCookies("refresh", newRefreshToken));
 
         // DB에 기존 refresh 토큰 삭제 후, 새 refresh 토큰으로 저장
         refreshTokenRepository.deleteByRefreshToken(refreshToken);
-        saveRefreshTokenEntity(email, newRefreshToken, 86400000L);
+        saveRefreshTokenEntity(memberUUID, newRefreshToken, 86400000L);
         
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    private void saveRefreshTokenEntity(String email, String refreshToken, Long expiredMs){
+    private void saveRefreshTokenEntity(String memberUUID, String refreshToken, Long expiredMs){
 
         Date date = new Date(System.currentTimeMillis() + expiredMs);
 
         RefreshTokenEntity refreshTokenEntity = new RefreshTokenEntity();
-        refreshTokenEntity.setEmail(email);
+        refreshTokenEntity.setMemberUUID(UUID.fromString(memberUUID));
         refreshTokenEntity.setRefreshToken(refreshToken);
         refreshTokenEntity.setExpirationTime(date.toString());
 

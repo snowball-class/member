@@ -16,6 +16,7 @@ import toyProject.snow.entity.MemberType;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.UUID;
 
 @Component
 public class JWTFilter extends OncePerRequestFilter {
@@ -64,11 +65,11 @@ public class JWTFilter extends OncePerRequestFilter {
         }
 
         // username, memberType 획득해, 일시적인 세션 만들기
-        String email = jwtUtil.getEmail(accessToken);
+        String memberUUID = jwtUtil.getMemberUUID(accessToken);
         String memberType = jwtUtil.getMemberType(accessToken);
 
         MemberEntity memberEntity = new MemberEntity();
-        memberEntity.setEmail(email);
+        memberEntity.setMemberUUID(UUID.fromString(memberUUID));
         memberEntity.setMemberType(MemberType.valueOf(memberType)); // -> 나중에 enum 수정해야할 듯
 
         CustomMemberDetails customMemberDetails = new CustomMemberDetails(memberEntity);
