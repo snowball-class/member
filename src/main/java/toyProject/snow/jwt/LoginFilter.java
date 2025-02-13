@@ -37,7 +37,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws ArithmeticException {
 
         //클라이언트 요청에서 username, password 추출
-        String email = obtainUsername(request); // username일 때만 받을 수 있다고? 나중에 뷰단 커스텀하거나 메소드 오버라이딩 해야함
+        String email = obtainUsername(request); // key 값이 username일 때만 받을 수 있다고? 나중에 뷰단 커스텀하거나 메소드 오버라이딩 해야함
         String password = obtainPassword(request);
 
         //token에 담은 검증을 위한 AuthenticationManager로 전달
