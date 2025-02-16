@@ -67,7 +67,7 @@ public class SecurityConfig {
         //.authenticated() : 로그인한 사람만 접속 가능
         http
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/login", "/", "join").permitAll()
+                        .requestMatchers("/login", "/", "join", "/swagger-ui/**", "/v3/**").permitAll()
                         .requestMatchers("/admin").hasRole("ADMIN")
                         .requestMatchers("/reissue").permitAll()
                         .anyRequest().authenticated());
