@@ -1,5 +1,6 @@
 package toyProject.snow.config;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -12,11 +13,17 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
 import toyProject.snow.dto.CustomMemberDetails;
 import toyProject.snow.jwt.CustomLogoutFilter;
 import toyProject.snow.jwt.JWTUtil;
 import toyProject.snow.jwt.LoginFilter;
 import toyProject.snow.repository.RefreshTokenRepository;
+
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 
 //스프링부트에 configuration인 것 등록 @Configuration
 //security 라는 config라는 것 @EnableWebSecurity
@@ -56,6 +63,21 @@ public class SecurityConfig {
         http
                 .csrf((auth) -> auth.disable());
 
+//        http
+//                .cors(corsCustomizer -> corsCustomizer.configurationSource(new CorsConfigurationSource() {
+//                    @Override
+//                    public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
+//                        CorsConfiguration corsConfig = new CorsConfiguration();
+//
+//                        corsConfig.setAllowedOrigins(Collections.singletonList("http://localhost:8081"));
+//                        corsConfig.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+//                        corsConfig.setAllowedHeaders(Collections.singletonList("*"));
+//                        corsConfig.setAllowCredentials(true);
+//
+//                        return corsConfig;
+//                    }
+//                }));
+
         //From 로그인 방식 disable : jwt 로그인 방식이라서
         http
                 .formLogin((auth) -> auth.disable());
@@ -69,6 +91,7 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests((auth) -> auth
                         .requestMatchers("/login", "/", "/join", "/swagger-ui/**", "/v3/**").permitAll()
+                        .requestMatchers("/loginDummy", "logoutDummy").permitAll()
                         .requestMatchers("/admin").hasRole("ADMIN")
                         .requestMatchers("/reissue").permitAll()
                         .anyRequest().authenticated());

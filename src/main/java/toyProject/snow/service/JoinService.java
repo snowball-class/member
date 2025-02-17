@@ -2,7 +2,7 @@ package toyProject.snow.service;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import toyProject.snow.dto.join.joinRequest.JoinDTO;
+import toyProject.snow.dto.join.joinRequest.JoinRquest;
 import toyProject.snow.entity.MemberEntity;
 import toyProject.snow.entity.MemberType;
 import toyProject.snow.repository.MemberRepository;
@@ -19,12 +19,12 @@ public class JoinService {
     }
 
     // boolean으로 회원가입 성공하면 true, 실패하면 false go
-    public boolean join(JoinDTO joinDTO){
+    public boolean join(JoinRquest joinRquest){
 
-        String name = joinDTO.getName();
-        String nickname = joinDTO.getNickname();
-        String email = joinDTO.getEmail();
-        String password = joinDTO.getPassword();
+        String name = joinRquest.getName();
+        String nickname = joinRquest.getNickname();
+        String email = joinRquest.getEmail();
+        String password = joinRquest.getPassword();
 
         Boolean isExist = memberRepository.existsByEmail(email);
 
