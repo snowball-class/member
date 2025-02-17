@@ -26,6 +26,7 @@ spring:
 springdoc:
   default-consumes-media-type: application/json;charset=UTF-8
   default-produces-media-type: application/json;charset=UTF-8
+  # show-login-endpoint: true # 로그인 스웨거 등록
   paths-to-match: /**
   swagger-ui:
     path: /

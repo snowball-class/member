@@ -1,5 +1,6 @@
 package toyProject.snow.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,6 +18,7 @@ public class JoinController {
         this.joinService = joinService;
     }
 
+    @Operation(summary = "회원가입", description = "name, nickname, email, password를 받아 회원가입")
     @PostMapping("/join")
     public String join(JoinDTO joinDTO){
 

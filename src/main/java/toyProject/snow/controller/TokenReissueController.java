@@ -1,6 +1,7 @@
 package toyProject.snow.controller;
 
 import io.jsonwebtoken.ExpiredJwtException;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -30,6 +31,7 @@ public class TokenReissueController {
         this.refreshTokenRepository = refreshTokenRepository;
     }
 
+    @Operation(summary = "리프레시토큰재발급")
     @PostMapping("/reissue")
     public ResponseEntity<?> reissue(HttpServletRequest request, HttpServletResponse response){
 

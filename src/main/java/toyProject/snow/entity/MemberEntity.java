@@ -18,9 +18,9 @@ public class MemberEntity {
 
     private MemberType memberType;
 
-//    @Column(nullable = false)
+    @Column(nullable = false)
     private String name;
-//    @Column(nullable = false)
+    @Column(nullable = false)
     private String nickname;
     @Column(nullable = false, unique = true)
     private String email;
