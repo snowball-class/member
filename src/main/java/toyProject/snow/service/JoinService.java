@@ -2,12 +2,10 @@ package toyProject.snow.service;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import toyProject.snow.dto.JoinDTO;
+import toyProject.snow.dto.join.joinRequest.JoinDTO;
 import toyProject.snow.entity.MemberEntity;
 import toyProject.snow.entity.MemberType;
 import toyProject.snow.repository.MemberRepository;
-
-import java.util.UUID;
 
 @Service
 public class JoinService {

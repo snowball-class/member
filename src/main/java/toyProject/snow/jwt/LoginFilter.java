@@ -77,20 +77,6 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         response.setHeader("access", accessToken);
         response.addCookie(createCookies("refresh", refreshToken));
         response.setStatus(HttpStatus.OK.value());
-
-//        단일토큰만 발급
-//        CustomMemberDetails customMemberDetails = (CustomMemberDetails) authentication.getPrincipal();
-//        String email = customMemberDetails.getUsername();
-//
-//        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
-//        Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
-//        GrantedAuthority auth = iterator.next();
-//
-//        String memberType = auth.getAuthority();
-//        String token = jwtUtil.createJwt(email, memberType, 60*60*10L);
-//
-//        response.addHeader("Authorization", "Bearer " + token);
-
     }
 
     private void saveRefreshTokenEntity(String memberUUID, String refreshToken, Long expiredMs){
