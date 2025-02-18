@@ -3,6 +3,7 @@ package toyProject.snow.service;
 import java.sql.Timestamp;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import toyProject.snow.dto.member.memberResponse.MemberDeletetResponse;
 import toyProject.snow.dto.member.memberResponse.MemberInfoResponse;
 import toyProject.snow.entity.MemberEntity;
 import toyProject.snow.jwt.JWTUtil;
@@ -24,8 +25,6 @@ public class MemberService {
     public MemberInfoResponse getMemberInfo(UUID memberUUID) {
         // 완전 전통적인 방식 vs record 방식.... 헹 너무 난이도 올리기 싫은데
 
-
-
         String name = memberRepository.findByMemberUUID(memberUUID).getName();
         String nickname = memberRepository.findByMemberUUID(memberUUID).getNickname();
         String email = memberRepository.findByMemberUUID(memberUUID).getEmail();
@@ -37,11 +36,12 @@ public class MemberService {
     }
 
     @Transactional
-    public void deleteMember(UUID memberUUID) {
-        if (!memberRepository.existsById(memberUUID)){
-
+    public MemberDeletetResponse deleteMember(UUID memberUUID) {
+        if (!memberRepository.existsByMemberUUID(memberUUID)){
+            return new MemberDeletetResponse(false);
         }
         memberRepository.deleteByMemberUUID(memberUUID);
+        return new MemberDeletetResponse(true);
     }
 
     @Transactional

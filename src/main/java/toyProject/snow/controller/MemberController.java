@@ -34,7 +34,6 @@ public class MemberController {
     @Operation(summary = "회원정보조회")
     @GetMapping
     public ApiResponse getMemberInfo(@AuthenticationPrincipal CustomMemberDetails member){
-        log.info("정보={}", ApiResponse.success(memberService.getMemberInfo(member.getMemberUUID())));
         return ApiResponse.success(memberService.getMemberInfo(member.getMemberUUID()));
     }
 
@@ -43,8 +42,8 @@ public class MemberController {
     */
     @Operation(summary = "회원탈퇴")
     @DeleteMapping
-    public ApiResponse deleteMember(@AuthenticationPrincipal User user){
-        return null; // ApiResponse.success(memberService.deleteMember(UUID.fromString(user.getUsername())));
+    public ApiResponse deleteMember(@AuthenticationPrincipal CustomMemberDetails member){
+        return ApiResponse.success(memberService.deleteMember(member.getMemberUUID()));
     }
 
     /*
