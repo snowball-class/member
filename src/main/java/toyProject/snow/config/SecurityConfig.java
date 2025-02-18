@@ -13,11 +13,13 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import toyProject.snow.dto.CustomMemberDetails;
 import toyProject.snow.jwt.CustomLogoutFilter;
 import toyProject.snow.jwt.JWTUtil;
+import toyProject.snow.jwt.JwtAuthenticationFilter;
 import toyProject.snow.jwt.LoginFilter;
 import toyProject.snow.repository.RefreshTokenRepository;
 
@@ -37,12 +39,14 @@ public class SecurityConfig {
     private final AuthenticationConfiguration authenticationConfiguration;
     private final JWTUtil jwtUtil;
     private final RefreshTokenRepository refreshTokenRepository;
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
 
-    public SecurityConfig(AuthenticationConfiguration authenticationConfiguration, JWTUtil jwtUtil, RefreshTokenRepository refreshTokenRepository){
+    public SecurityConfig(AuthenticationConfiguration authenticationConfiguration, JWTUtil jwtUtil, RefreshTokenRepository refreshTokenRepository, JwtAuthenticationFilter jwtAuthenticationFilter){
         this.authenticationConfiguration = authenticationConfiguration;
         this.jwtUtil = jwtUtil;
         this.refreshTokenRepository = refreshTokenRepository;
+        this.jwtAuthenticationFilter = jwtAuthenticationFilter;
     }
 
     // authentication을 가져오는 manager을 빈으로 등록
@@ -63,20 +67,20 @@ public class SecurityConfig {
         http
                 .csrf((auth) -> auth.disable());
 
-//        http
-//                .cors(corsCustomizer -> corsCustomizer.configurationSource(new CorsConfigurationSource() {
-//                    @Override
-//                    public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
-//                        CorsConfiguration corsConfig = new CorsConfiguration();
-//
-//                        corsConfig.setAllowedOrigins(Collections.singletonList("http://localhost:8081"));
-//                        corsConfig.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-//                        corsConfig.setAllowedHeaders(Collections.singletonList("*"));
-//                        corsConfig.setAllowCredentials(true);
-//
-//                        return corsConfig;
-//                    }
-//                }));
+        http
+                .cors(corsCustomizer -> corsCustomizer.configurationSource(new CorsConfigurationSource() {
+                    @Override
+                    public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
+                        CorsConfiguration corsConfig = new CorsConfiguration();
+
+                        corsConfig.setAllowedOrigins(Collections.singletonList("http://localhost:8081"));
+                        corsConfig.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+                        corsConfig.setAllowedHeaders(Collections.singletonList("*"));
+                        corsConfig.setAllowCredentials(true);
+
+                        return corsConfig;
+                    }
+                }));
 
         //From 로그인 방식 disable : jwt 로그인 방식이라서
         http
@@ -90,9 +94,10 @@ public class SecurityConfig {
         //.authenticated() : 로그인한 사람만 접속 가능
         http
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/login", "/", "/join", "/swagger-ui/**", "/v3/**").permitAll()
+                        .requestMatchers("/login", "/", "/join").permitAll()
+                        .requestMatchers( "/swagger-ui/**", "/v3/**").permitAll()
                         .requestMatchers("/loginDummy", "logoutDummy").permitAll()
-                        .requestMatchers("/admin").hasRole("ADMIN")
+//                        .requestMatchers("/admin").hasRole("ADMIN")
                         .requestMatchers("/reissue").permitAll()
                         .anyRequest().authenticated());
 
@@ -103,6 +108,9 @@ public class SecurityConfig {
         // 커스터마이징한 logoutFilter 추가
         http
                 .addFilterBefore(new CustomLogoutFilter(jwtUtil, refreshTokenRepository), LogoutFilter.class);
+
+        http
+                .addFilterBefore(jwtAuthenticationFilter, BasicAuthenticationFilter.class);
 
         //세션 설정 : jwt 방식에서는 세션이 항상 stateless로 설정, 가장 중요
         http

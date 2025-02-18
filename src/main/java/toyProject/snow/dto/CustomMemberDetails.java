@@ -16,7 +16,6 @@ public class CustomMemberDetails implements UserDetails {
         this.memberEntity = memberEntity;
     }
 
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
 
@@ -32,6 +31,10 @@ public class CustomMemberDetails implements UserDetails {
         return collection;
     }
 
+    public UUID getMemberUUID() {
+        return memberEntity.getMemberUUID();
+    }
+
     @Override
     public String getPassword() {
         return memberEntity.getPassword();
@@ -40,10 +43,6 @@ public class CustomMemberDetails implements UserDetails {
     @Override
     public String getUsername() {
         return memberEntity.getEmail();
-    }
-
-    public UUID getMemberUUID(){
-        return memberEntity.getMemberUUID();
     }
 
     @Override

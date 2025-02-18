@@ -7,6 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class JoinRquest {
+
     @Schema(description = "회원이름", example = "홍길동")
     private String name;
     @Schema(description = "회원닉네임", example = "동에번쩍서에번쩍")

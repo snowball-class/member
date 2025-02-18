@@ -1,13 +1,20 @@
 package toyProject.snow.jwt;
 
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
+import toyProject.snow.dto.CustomMemberDetails;
+import toyProject.snow.entity.MemberEntity;
 
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
+import java.util.UUID;
 
 // security 0.12.3 ver
 @Component
@@ -53,4 +60,17 @@ public class JWTUtil {
                 .signWith(secretKey)
                 .compact();
     }
+
+    // 토큰 검증 메서드 추가
+    public boolean validateToken(String token) {
+        try {
+            // 토큰 파싱 시도가 성공하면 유효한 토큰으로 간주
+            Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token);
+            return true;
+        } catch (JwtException | IllegalArgumentException e) {
+            // 토큰이 잘못되었거나 만료된 경우 false 반환
+            return false;
+        }
+    }
+
 }
