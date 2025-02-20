@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import toyProject.snow.dto.ApiResponse;
 import toyProject.snow.dto.CustomMemberDetails;
+import toyProject.snow.dto.member.memberRequest.MemberUpdateRequest;
 import toyProject.snow.entity.MemberEntity;
 import toyProject.snow.service.MemberService;
 
@@ -51,7 +52,7 @@ public class MemberController {
     */
     @Operation(summary = "회원정보수정")
     @PutMapping
-    public ApiResponse updateMember(@AuthenticationPrincipal User user){
-        return null; // ApiResponse.success(memberService.updateMember(UUID.fromString(user.getUsername())));
+    public ApiResponse updateMember(@AuthenticationPrincipal CustomMemberDetails member, @RequestBody MemberUpdateRequest request){
+        return ApiResponse.success(memberService.updateMember(member.getMemberUUID(), request));
     }
 }
