@@ -1,5 +1,5 @@
 package toyProject.snow.entity;
 
 public enum MemberType {
-    ADMIN, MEMBER
+    ADMIN, ROLE_MEMBER
 }

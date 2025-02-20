@@ -3,7 +3,6 @@ package toyProject.snow.config;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -16,15 +15,14 @@ import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
-import toyProject.snow.dto.CustomMemberDetails;
 import toyProject.snow.jwt.CustomLogoutFilter;
+import toyProject.snow.jwt.JWTFilter;
 import toyProject.snow.jwt.JWTUtil;
 import toyProject.snow.jwt.JwtAuthenticationFilter;
 import toyProject.snow.jwt.LoginFilter;
 import toyProject.snow.repository.RefreshTokenRepository;
 
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 
 //스프링부트에 configuration인 것 등록 @Configuration
@@ -63,10 +61,11 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
 
-        //csrf disable : session에서는 session이 stateful 상태라 csrf 방어해 줘야함. jwt 방식은 stateless라 방어 필요 없음
+        // csrf disable : session에서는 session이 stateful 상태라 csrf 방어해 줘야함. jwt 방식은 stateless라 방어 필요 없음
         http
                 .csrf((auth) -> auth.disable());
 
+        // cors 설정
         http
                 .cors(corsCustomizer -> corsCustomizer.configurationSource(new CorsConfigurationSource() {
                     @Override
@@ -82,16 +81,16 @@ public class SecurityConfig {
                     }
                 }));
 
-        //From 로그인 방식 disable : jwt 로그인 방식이라서
+        // From 로그인 방식 disable : jwt 로그인 방식이라서
         http
                 .formLogin((auth) -> auth.disable());
 
-        //http basic 인증 방식 disable : jwt 로그인 방식이라서
+        // http basic 인증 방식 disable : jwt 로그인 방식이라서
         http
                 .httpBasic((auth) -> auth.disable());
 
-        //인가 작업 : 특정한 경로에 대해 인가 작업(.authorizeHttpRequests 이용)
-        //.authenticated() : 로그인한 사람만 접속 가능
+        // 인가 작업 : 특정한 경로에 대해 인가 작업(.authorizeHttpRequests 이용)
+        // .authenticated() : 로그인한 사람만 접속 가능
         http
                 .authorizeHttpRequests((auth) -> auth
                         .requestMatchers("/login", "/", "/join").permitAll()
@@ -112,7 +111,7 @@ public class SecurityConfig {
         http
                 .addFilterBefore(jwtAuthenticationFilter, BasicAuthenticationFilter.class);
 
-        //세션 설정 : jwt 방식에서는 세션이 항상 stateless로 설정, 가장 중요
+        // 세션 설정 : jwt 방식에서는 세션이 항상 stateless로 설정, 가장 중요
         http
                 .sessionManagement((session) -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS));

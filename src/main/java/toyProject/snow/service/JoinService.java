@@ -36,7 +36,7 @@ public class JoinService {
         newMember.setName(name);
         newMember.setNickname(nickname);
         newMember.setEmail(email);
-        newMember.setMemberType(MemberType.MEMBER);
+        newMember.setMemberType(MemberType.ROLE_MEMBER);
         newMember.setPassword(bCryptPasswordEncoder.encode(password));
 
         memberRepository.save(newMember);

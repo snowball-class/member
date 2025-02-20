@@ -1,60 +1,90 @@
 package toyProject.snow.jwt;
 
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.core.annotation.Order;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-import toyProject.snow.service.CustomMemberDetailsService;
+import toyProject.snow.dto.CustomMemberDetails;
+import toyProject.snow.entity.MemberEntity;
+import toyProject.snow.entity.MemberType;
 
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.UUID;
 
+/*
+JWTFilter
+ */
+@Slf4j
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
-    private final JWTUtil jwtUtil;
-    private final CustomMemberDetailsService customMemberDetailsService;
 
-    public JwtAuthenticationFilter(JWTUtil jwtUtil, CustomMemberDetailsService customMemberDetailsService) {
+    private JWTUtil jwtUtil;
+
+    public JwtAuthenticationFilter(JWTUtil jwtUtil){
         this.jwtUtil = jwtUtil;
-        this.customMemberDetailsService = customMemberDetailsService;
     }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request,
-                                    HttpServletResponse response,
-                                    FilterChain filterChain)
-            throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+
+        // 헤더에서 access 키가 담긴 토큰 꺼내기
+        String accessToken = request.getHeader("access");
 
 
-        String path = request.getServletPath();
-        // Public 엔드포인트인 경우 필터 로직을 건너뜁니다.
-        if (path.equals("/join") || path.equals("/login") ||
-                path.startsWith("/swagger-ui") || path.startsWith("/v3") ||
-                path.equals("/loginDummy") || path.equals("/logoutDummy")) {
+        // 토큰이 없으면 다음 필터로
+        if(accessToken == null){
             filterChain.doFilter(request, response);
             return;
         }
 
-        String authHeader = request.getHeader("Authorization");
-        if (authHeader != null && authHeader.startsWith("Bearer ")) {
-            String token = authHeader.substring(7).trim(); // "Bearer " 제거
-            if (jwtUtil.validateToken(token)) {
-                // 토큰에서 사용자 이메일(또는 식별자) 추출
-                String email = jwtUtil.getEmail(token);
-                // UserDetailsService를 사용하여 CustomMemberDetails 로드
-                UserDetails userDetails = customMemberDetailsService.loadUserByUsername(email);
-                // Authentication 객체 생성 (비밀번호는 null, 토큰이 이미 인증되었으므로)
-                UsernamePasswordAuthenticationToken authentication =
-                        new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-                // SecurityContext에 저장
-                SecurityContextHolder.getContext().setAuthentication(authentication);
-            }
+        // 토큰 만료 여부 확인, 만료 시 다음 필터 넘기면 X
+        try{
+            jwtUtil.isExpired(accessToken);
+        }catch(ExpiredJwtException e){
+
+            // responseBody -> 프론트와 상의 필요
+            PrintWriter writer = response.getWriter();
+            writer.println("access token expired");
+
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // -> 프론트와 상의필요
+            return;
         }
+
+        // 토큰이 access 인지 확인(발급 시 페이로드에 명시) -> 프상필
+        String tokenType = jwtUtil.getTokenType(accessToken);
+
+        if(!tokenType.equals("access")){
+
+            PrintWriter writer = response.getWriter();
+            writer.println("invalid access token");
+
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            return;
+        }
+
+        // username, memberType 획득해, 일시적인 세션 만들기
+        String memberUUID = jwtUtil.getMemberUUID(accessToken);
+        String memberType = jwtUtil.getMemberType(accessToken);
+        String email = jwtUtil.getEmail(accessToken);
+
+        MemberEntity memberEntity = new MemberEntity();
+        memberEntity.setMemberUUID(UUID.fromString(memberUUID));
+        memberEntity.setMemberType(MemberType.valueOf(memberType)); // -> 나중에 enum 수정해야할 듯
+        memberEntity.setEmail(email);
+
+        CustomMemberDetails customMemberDetails = new CustomMemberDetails(memberEntity);
+
+        Authentication authToken = new UsernamePasswordAuthenticationToken(customMemberDetails, null, customMemberDetails.getAuthorities());
+        SecurityContextHolder.getContext().setAuthentication(authToken);
+
         filterChain.doFilter(request, response);
     }
 }
