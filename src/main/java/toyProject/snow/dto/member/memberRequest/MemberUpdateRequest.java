@@ -8,7 +8,7 @@ import lombok.Setter;
 @Getter
 public class MemberUpdateRequest {
 
-    @Schema(description = "회원 새닉네임", example = "도술천재길동")
+    @Schema(description = "회원 새닉네임", example = "길길이")
     private String newNickname;
     @Schema(description = "회원 비밀번호", example = "1234")
     private String password;

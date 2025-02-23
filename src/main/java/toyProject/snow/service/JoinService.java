@@ -2,7 +2,9 @@ package toyProject.snow.service;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import toyProject.snow.dto.join.joinRequest.JoinRquest;
+import org.springframework.transaction.annotation.Transactional;
+import toyProject.snow.dto.join.joinRequest.JoinRequest;
+import toyProject.snow.dto.join.joinResponse.JoinResponse;
 import toyProject.snow.entity.MemberEntity;
 import toyProject.snow.entity.MemberType;
 import toyProject.snow.repository.MemberRepository;
@@ -19,17 +21,18 @@ public class JoinService {
     }
 
     // boolean으로 회원가입 성공하면 true, 실패하면 false go
-    public boolean join(JoinRquest joinRquest){
+    @Transactional
+    public JoinResponse join(JoinRequest joinRequest){
 
-        String name = joinRquest.getName();
-        String nickname = joinRquest.getNickname();
-        String email = joinRquest.getEmail();
-        String password = joinRquest.getPassword();
+        String name = joinRequest.getName();
+        String nickname = joinRequest.getNickname();
+        String email = joinRequest.getEmail();
+        String password = joinRequest.getPassword();
 
         Boolean isExist = memberRepository.existsByEmail(email);
 
         if(isExist){
-            return false;
+            throw new IllegalArgumentException("이미 사용중인 이메일입니다.");
         }
 
         MemberEntity newMember = new MemberEntity();
@@ -41,6 +44,6 @@ public class JoinService {
 
         memberRepository.save(newMember);
 
-        return true;
+        return new JoinResponse(newMember.getName(), newMember.getNickname(), newMember.getMemberType());
     }
 }

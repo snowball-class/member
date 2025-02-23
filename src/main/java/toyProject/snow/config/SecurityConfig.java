@@ -16,7 +16,6 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import toyProject.snow.jwt.CustomLogoutFilter;
-import toyProject.snow.jwt.JWTFilter;
 import toyProject.snow.jwt.JWTUtil;
 import toyProject.snow.jwt.JwtAuthenticationFilter;
 import toyProject.snow.jwt.LoginFilter;
@@ -95,7 +94,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests((auth) -> auth
                         .requestMatchers("/login", "/", "/join").permitAll()
                         .requestMatchers( "/swagger-ui/**", "/v3/**").permitAll()
-                        .requestMatchers("/loginDummy", "logoutDummy").permitAll()
+                        .requestMatchers("/login_dummy", "/logout_dummy").permitAll()
 //                        .requestMatchers("/admin").hasRole("ADMIN")
                         .requestMatchers("/reissue").permitAll()
                         .anyRequest().authenticated());
