@@ -1,19 +1,27 @@
 package toyProject.snow.dto;
 
-import toyProject.snow.entity.ApiStatus;
+import org.springframework.http.HttpStatus;
 
-public record ApiResponse(
-        ApiStatus status,
+public record ApiResponse<T>(
+        int status,
         String message,
-        Object data
+        T data
 
 ){
-    public static ApiResponse success(Object data){
-            return new ApiResponse(ApiStatus.SUCCESS, null, data);
+    public static <T> ApiResponse<T> success(T data) {
+        return new ApiResponse<>(HttpStatus.OK.value(), null, data);
     }
 
-    public static ApiResponse error(String message){
-            return new ApiResponse(ApiStatus.ERROR, message, null);
+    public static <T> ApiResponse<T> created(T data) {
+        return new ApiResponse<>(HttpStatus.CREATED.value(), null, data);
+    }
+
+    public static <T> ApiResponse<T> accepted(T data) {
+        return new ApiResponse<>(HttpStatus.ACCEPTED.value(), null, data);
+    }
+
+    public static <T> ApiResponse<T> error(T data){
+        return new ApiResponse(HttpStatus.BAD_REQUEST.value(), null, data);
     }
 
 }
