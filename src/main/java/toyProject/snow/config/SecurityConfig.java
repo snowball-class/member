@@ -72,6 +72,7 @@ public class SecurityConfig {
                         CorsConfiguration corsConfig = new CorsConfiguration();
 
                         corsConfig.setAllowedOrigins(Collections.singletonList("http://localhost:8081"));
+                        corsConfig.setAllowedOrigins(Collections.singletonList("http://localhost:3000"));
                         corsConfig.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
                         corsConfig.setAllowedHeaders(Collections.singletonList("*"));
                         corsConfig.setAllowCredentials(true);
@@ -94,7 +95,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests((auth) -> auth
                         .requestMatchers("/login", "/", "/join").permitAll()
                         .requestMatchers( "/swagger-ui/**", "/v3/**").permitAll()
-                        .requestMatchers("/login_dummy", "/logout_dummy").permitAll()
+                        .requestMatchers("/login_dummy", "/logout_dummy", "/dummmy/member").permitAll()
 //                        .requestMatchers("/admin").hasRole("ADMIN")
                         .requestMatchers("/reissue").permitAll()
                         .anyRequest().authenticated());
