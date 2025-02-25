@@ -64,22 +64,20 @@ public class SecurityConfig {
         http
                 .csrf((auth) -> auth.disable());
 
-        // cors 설정
-        http
-                .cors(corsCustomizer -> corsCustomizer.configurationSource(new CorsConfigurationSource() {
-                    @Override
-                    public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
-                        CorsConfiguration corsConfig = new CorsConfiguration();
-
-                        corsConfig.setAllowedOrigins(Collections.singletonList("http://localhost:8081"));
-                        corsConfig.setAllowedOrigins(Collections.singletonList("http://localhost:3000"));
-                        corsConfig.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-                        corsConfig.setAllowedHeaders(Collections.singletonList("*"));
-                        corsConfig.setAllowCredentials(true);
-
-                        return corsConfig;
-                    }
-                }));
+//        // cors 설정
+//        http
+//                .cors(corsCustomizer -> corsCustomizer.configurationSource(new CorsConfigurationSource() {
+//                    @Override
+//                    public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
+//                        CorsConfiguration corsConfig = new CorsConfiguration();
+//                        corsConfig.setAllowedOrigins(Arrays.asList("http://localhost:8081", "http://localhost:3000"));
+//                        corsConfig.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
+//                        corsConfig.setAllowedHeaders(Collections.singletonList("*"));
+//                        corsConfig.setAllowCredentials(true);
+//
+//                        return corsConfig;
+//                    }
+//                }));
 
         // From 로그인 방식 disable : jwt 로그인 방식이라서
         http
