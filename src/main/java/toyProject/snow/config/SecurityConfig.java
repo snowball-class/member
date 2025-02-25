@@ -15,6 +15,7 @@ import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import toyProject.snow.jwt.CustomLogoutFilter;
 import toyProject.snow.jwt.JWTUtil;
 import toyProject.snow.jwt.JwtAuthenticationFilter;
@@ -23,6 +24,7 @@ import toyProject.snow.repository.RefreshTokenRepository;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 //스프링부트에 configuration인 것 등록 @Configuration
 //security 라는 config라는 것 @EnableWebSecurity
@@ -62,11 +64,12 @@ public class SecurityConfig {
 
         // csrf disable : session에서는 session이 stateful 상태라 csrf 방어해 줘야함. jwt 방식은 stateless라 방어 필요 없음
         http
+                .cors(cors -> cors.configurationSource(corsConfigurationSource())) // 🔥 직접 설정
                 .csrf((auth) -> auth.disable());
 
 //        // cors 설정
 //        http
-//                .cors(corsCustomizer -> corsCustomizer.configurationSource(new CorsConfigurationSource() {
+//                .cors(cors -> cors.configurationSource(new CorsConfigurationSource() {
 //                    @Override
 //                    public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
 //                        CorsConfiguration corsConfig = new CorsConfiguration();
@@ -91,6 +94,7 @@ public class SecurityConfig {
         // .authenticated() : 로그인한 사람만 접속 가능
         http
                 .authorizeHttpRequests((auth) -> auth
+                        .requestMatchers("OPTIONS", "/**").permitAll() // cors 용
                         .requestMatchers("/login", "/", "/join").permitAll()
                         .requestMatchers( "/swagger-ui/**", "/v3/**").permitAll()
                         .requestMatchers("/login_dummy", "/logout_dummy", "/dummmy/member").permitAll()
@@ -115,6 +119,20 @@ public class SecurityConfig {
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
         return http.build();
+    }
+
+    @Bean
+    CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration corsConfig = new CorsConfiguration();
+        corsConfig.setAllowedOrigins(List.of("http://localhost:3000"));
+        corsConfig.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
+        corsConfig.setAllowedHeaders(List.of("*"));
+        corsConfig.setAllowCredentials(true);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", corsConfig);
+
+        return source;
     }
 }
 
