@@ -9,7 +9,7 @@ import java.util.UUID;
 public interface MemberRepository extends JpaRepository<MemberEntity, UUID> {
 
     boolean existsByEmail(String email);
-    Boolean existsByNickName(String nickname);
+    Boolean existsByNickname(String nickname);
 
     boolean existsByMemberUUID(UUID memberUUID);
     MemberEntity findByEmail(String email);

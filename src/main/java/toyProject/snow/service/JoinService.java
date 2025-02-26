@@ -35,8 +35,8 @@ public class JoinService {
             throw new ExceptionResponseHandler.EmailDuplicatedException("이미 사용중인 이메일입니다.");
         }
 
-        Boolean isNickNameExist = memberRepository.existsByNickName(nickname);
-        if(isNickNameExist){
+        Boolean isNicknameExist = memberRepository.existsByNickname(nickname);
+        if(isNicknameExist){
             throw new ExceptionResponseHandler.NickNameDuplicatedException("이미 사용중인 닉네임입니다.");
         }
 
