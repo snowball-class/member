@@ -7,12 +7,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 import toyProject.snow.dto.ApiResponse;
 
 import java.security.SignatureException;
 import java.util.NoSuchElementException;
 
-@RestController
+@RestControllerAdvice
 public class ExceptionResponseHandler {
 
     // badRequest() : 400
@@ -25,10 +26,20 @@ public class ExceptionResponseHandler {
      회원가입 중복관련
      중복된 이메일
      */
-    @ExceptionHandler({IllegalArgumentException.class})
-    public ResponseEntity<ApiResponse> handleEmailDuplicatedException(){
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.error("중복된 이메일입니다."));
-    }
+    @ExceptionHandler({EmailDuplicatedException.class})
+    public ResponseEntity<ApiResponse> handleEmailDuplicatedException(EmailDuplicatedException e){
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.error(e.getMessage()));
+    } //"이미 사용중인 이메일입니다."
+
+    @ExceptionHandler({NickNameDuplicatedException.class})
+    public ResponseEntity<ApiResponse> handleNickNameDuplicatedException(NickNameDuplicatedException e){
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.error(e.getMessage()));
+    } //"이미 사용중인 닉네임입니다."
+
+    @ExceptionHandler({passwordNotMatchException.class})
+    public ResponseEntity<ApiResponse> handlepasswordNotMatchException(passwordNotMatchException e){
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.error(e.getMessage()));
+    } //"비밀번호가 일치하지 않습니다."
 
     /*
      HttpStatus.UNAUTHORIZED : 401
@@ -59,6 +70,12 @@ public class ExceptionResponseHandler {
 
     public static class NickNameDuplicatedException extends RuntimeException {
         public NickNameDuplicatedException(String message) {
+            super(message);
+        }
+    }
+
+    public static class passwordNotMatchException extends RuntimeException {
+        public passwordNotMatchException(String message) {
             super(message);
         }
     }

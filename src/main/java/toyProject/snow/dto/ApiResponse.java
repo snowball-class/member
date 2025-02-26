@@ -20,8 +20,8 @@ public record ApiResponse<T>(
         return new ApiResponse<>(HttpStatus.ACCEPTED.value(), null, data);
     }
 
-    public static <T> ApiResponse<T> error(T data){
-        return new ApiResponse(HttpStatus.BAD_REQUEST.value(), null, data);
+    public static <T> ApiResponse<T> error(String message){
+        return new ApiResponse(HttpStatus.BAD_REQUEST.value(), message, null);
     }
 
 }

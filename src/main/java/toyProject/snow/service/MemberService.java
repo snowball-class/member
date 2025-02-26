@@ -10,6 +10,7 @@ import toyProject.snow.dto.member.memberResponse.MemberDeletetResponse;
 import toyProject.snow.dto.member.memberResponse.MemberInfoResponse;
 import toyProject.snow.dto.member.memberResponse.MemberUpdateResponse;
 import toyProject.snow.entity.MemberEntity;
+import toyProject.snow.handler.ExceptionResponseHandler;
 import toyProject.snow.repository.MemberRepository;
 
 import javax.swing.text.html.Option;
@@ -72,7 +73,7 @@ public class MemberService {
         MemberEntity memberEntity = optionalMemberEntity.get();
 
         if(!bCryptPasswordEncoder.matches(request.getPassword(), memberEntity.getPassword())){
-            throw new IllegalArgumentException("비밀번호 일치하지 않음");
+            throw new ExceptionResponseHandler.passwordNotMatchException("비밀번호가 일치하지 않습니다.");
         }
 
         memberEntity.setNickname(request.getNewNickname());
