@@ -7,6 +7,7 @@ import toyProject.snow.dto.join.joinRequest.JoinRequest;
 import toyProject.snow.dto.join.joinResponse.JoinResponse;
 import toyProject.snow.entity.MemberEntity;
 import toyProject.snow.entity.MemberType;
+import toyProject.snow.handler.ExceptionResponseHandler;
 import toyProject.snow.repository.MemberRepository;
 
 @Service
@@ -29,10 +30,14 @@ public class JoinService {
         String email = joinRequest.getEmail();
         String password = joinRequest.getPassword();
 
-        Boolean isExist = memberRepository.existsByEmail(email);
+        Boolean isEmailExist = memberRepository.existsByEmail(email);
+        if(isEmailExist){
+            throw new ExceptionResponseHandler.EmailDuplicatedException("이미 사용중인 이메일입니다.");
+        }
 
-        if(isExist){
-            throw new IllegalArgumentException("이미 사용중인 이메일입니다.");
+        Boolean isNickNameExist = memberRepository.existsByNickName(nickname);
+        if(isNickNameExist){
+            throw new ExceptionResponseHandler.NickNameDuplicatedException("이미 사용중인 닉네임입니다.");
         }
 
         MemberEntity newMember = new MemberEntity();

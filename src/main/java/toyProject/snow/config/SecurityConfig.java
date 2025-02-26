@@ -67,21 +67,6 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource())) // 🔥 직접 설정
                 .csrf((auth) -> auth.disable());
 
-//        // cors 설정
-//        http
-//                .cors(cors -> cors.configurationSource(new CorsConfigurationSource() {
-//                    @Override
-//                    public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
-//                        CorsConfiguration corsConfig = new CorsConfiguration();
-//                        corsConfig.setAllowedOrigins(Arrays.asList("http://localhost:8081", "http://localhost:3000"));
-//                        corsConfig.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
-//                        corsConfig.setAllowedHeaders(Collections.singletonList("*"));
-//                        corsConfig.setAllowCredentials(true);
-//
-//                        return corsConfig;
-//                    }
-//                }));
-
         // From 로그인 방식 disable : jwt 로그인 방식이라서
         http
                 .formLogin((auth) -> auth.disable());

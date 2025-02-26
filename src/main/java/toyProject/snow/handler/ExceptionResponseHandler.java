@@ -22,6 +22,15 @@ public class ExceptionResponseHandler {
     }
 
     /*
+     회원가입 중복관련
+     중복된 이메일
+     */
+    @ExceptionHandler({IllegalArgumentException.class})
+    public ResponseEntity<ApiResponse> handleEmailDuplicatedException(){
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.error("중복된 이메일입니다."));
+    }
+
+    /*
      HttpStatus.UNAUTHORIZED : 401
      토큰 오류
      */
@@ -40,4 +49,20 @@ public class ExceptionResponseHandler {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ApiResponse.error("토큰이 만료되었습니다."));
     }
 
+
+    // 커스텀 예외 정의
+    public static class EmailDuplicatedException extends RuntimeException {
+        public EmailDuplicatedException(String message) {
+            super(message);
+        }
+    }
+
+    public static class NickNameDuplicatedException extends RuntimeException {
+        public NickNameDuplicatedException(String message) {
+            super(message);
+        }
+    }
+
 }
+
+
