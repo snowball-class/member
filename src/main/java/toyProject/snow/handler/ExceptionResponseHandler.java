@@ -1,6 +1,7 @@
 package toyProject.snow.handler;
 
 import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
@@ -45,12 +46,12 @@ public class ExceptionResponseHandler {
      HttpStatus.UNAUTHORIZED : 401
      토큰 오류
      */
-    @ExceptionHandler({SignatureException.class})
+    @ExceptionHandler({SignatureException.class, JwtException.class})
     public ResponseEntity<ApiResponse> handleSignatureTokenException(){
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ApiResponse.error("토큰이 유효하지 않습니다."));
     }
 
-    @ExceptionHandler({MalformedJwtException.class})
+    @ExceptionHandler({MalformedJwtException.class, IllegalArgumentException.class})
     public ResponseEntity<ApiResponse> handleInvalidTokenException(){
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ApiResponse.error("올바르지 않은 토큰입니다."));
     }

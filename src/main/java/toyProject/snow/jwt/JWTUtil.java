@@ -3,18 +3,12 @@ package toyProject.snow.jwt;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
-import toyProject.snow.dto.CustomMemberDetails;
-import toyProject.snow.entity.MemberEntity;
 
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
-import java.util.UUID;
 
 // security 0.12.3 ver
 @Component
@@ -52,7 +46,7 @@ public class JWTUtil {
     public String createJwt(String tokenType, String memberUUID, String email, String memberType, Long expiredMs){
         return Jwts.builder()
                 .claim("tokenType", tokenType)
-                .claim("memberUUID", memberUUID)
+                .setSubject(memberUUID) // 여기서 subject를 설정
                 .claim("email", email)
                 .claim("memberType", memberType)
                 .issuedAt(new Date(System.currentTimeMillis())) // 현재 발행 시간

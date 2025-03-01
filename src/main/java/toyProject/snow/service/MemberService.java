@@ -42,7 +42,7 @@ public class MemberService {
         String name = memberEntity.getName();
         String nickname = memberEntity.getNickname();
         String email =memberEntity.getEmail();
-        Timestamp joinDate = Timestamp.valueOf(memberEntity.getJoinDate().toLocalDateTime());
+        Timestamp joinDate = Timestamp.valueOf(memberEntity.getJoinDate());
 
         MemberInfoResponse memberInfoResponse = new MemberInfoResponse(name, nickname, email, joinDate);
 

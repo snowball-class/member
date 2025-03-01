@@ -1,11 +1,15 @@
 package toyProject.snow.dto.member.memberResponse;
 
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Getter
 public class MemberInfoResponse {
@@ -20,7 +24,9 @@ public class MemberInfoResponse {
     @Schema(description = "회원이메일", example = "gildong@naver.com")
     private String email;
     @Schema(description = "가입일", example = "2025-02-18")
-    private Timestamp joinDate;
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss", timezone = "Asia/Seoul")
+    private LocalDateTime joinDate;
 
     public MemberInfoResponse(){
     }
