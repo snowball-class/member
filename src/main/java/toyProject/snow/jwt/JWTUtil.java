@@ -46,7 +46,8 @@ public class JWTUtil {
     public String createJwt(String tokenType, String memberUUID, String email, String memberType, Long expiredMs){
         return Jwts.builder()
                 .claim("tokenType", tokenType)
-                .setSubject(memberUUID) // 여기서 subject를 설정
+                .claim("memberUUID", memberUUID)
+                // .setSubject(memberUUID) // 여기서 subject를 설정
                 .claim("email", email)
                 .claim("memberType", memberType)
                 .issuedAt(new Date(System.currentTimeMillis())) // 현재 발행 시간

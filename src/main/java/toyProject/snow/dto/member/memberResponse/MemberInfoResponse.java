@@ -33,7 +33,8 @@ public class MemberInfoResponse {
         this.result = result;
     }
 
-    public MemberInfoResponse(String name, String nickname, String email, LocalDateTime joinDate){
+    public MemberInfoResponse(Boolean result, String name, String nickname, String email, LocalDateTime joinDate){
+        this.result = result;
         this.email = email;
         this.name = name;
         this.nickname = nickname;

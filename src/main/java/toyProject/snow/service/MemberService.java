@@ -44,7 +44,7 @@ public class MemberService {
         String email =memberEntity.getEmail();
         LocalDateTime joinDate = memberEntity.getJoinDate();
 
-        MemberInfoResponse memberInfoResponse = new MemberInfoResponse(name, nickname, email, joinDate);
+        MemberInfoResponse memberInfoResponse = new MemberInfoResponse(true, name, nickname, email, joinDate);
 
         return memberInfoResponse;
     }

@@ -11,10 +11,12 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import toyProject.snow.dto.ApiResponse;
 import toyProject.snow.dto.CustomMemberDetails;
 import toyProject.snow.entity.RefreshTokenEntity;
 import toyProject.snow.repository.RefreshTokenRepository;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
@@ -51,7 +53,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
     //로그인 성공시 실행하는 메소드 (여기서 JWT를 발급하면 됨)
     @Override
-    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication){
+    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) throws IOException {
 
         // 유저 정보
         String email = authentication.getName();
@@ -75,6 +77,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         response.setHeader("access", accessToken);
         response.addCookie(createCookies("refresh", refreshToken));
         response.setStatus(HttpStatus.OK.value());
+        response.getWriter().write("{\"status\": 200, \n\"message\": login success}");
     }
 
     private void saveRefreshTokenEntity(String memberUUID, String refreshToken, Long expiredMs){
