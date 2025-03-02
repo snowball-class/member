@@ -5,10 +5,8 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 @Getter
@@ -35,7 +33,7 @@ public class MemberInfoResponse {
         this.result = result;
     }
 
-    public MemberInfoResponse(String name, String nickname, String email, Timestamp joinDate){
+    public MemberInfoResponse(String name, String nickname, String email, LocalDateTime joinDate){
         this.email = email;
         this.name = name;
         this.nickname = nickname;

@@ -1,6 +1,5 @@
 package toyProject.snow.service;
 
-import java.sql.Timestamp;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -14,6 +13,7 @@ import toyProject.snow.handler.ExceptionResponseHandler;
 import toyProject.snow.repository.MemberRepository;
 
 import javax.swing.text.html.Option;
+import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -42,7 +42,7 @@ public class MemberService {
         String name = memberEntity.getName();
         String nickname = memberEntity.getNickname();
         String email =memberEntity.getEmail();
-        Timestamp joinDate = Timestamp.valueOf(memberEntity.getJoinDate());
+        LocalDateTime joinDate = memberEntity.getJoinDate();
 
         MemberInfoResponse memberInfoResponse = new MemberInfoResponse(name, nickname, email, joinDate);
 

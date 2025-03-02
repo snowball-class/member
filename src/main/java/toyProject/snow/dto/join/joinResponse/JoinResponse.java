@@ -5,8 +5,6 @@ import lombok.Getter;
 import lombok.Setter;
 import toyProject.snow.entity.MemberType;
 
-import java.sql.Timestamp;
-
 @Getter
 @Setter
 public class JoinResponse {
