@@ -24,6 +24,7 @@ public class ExceptionResponseHandler {
     }
 
     /*
+     커스텀 예외
      회원가입 중복관련
      중복된 이메일
      */
@@ -42,6 +43,7 @@ public class ExceptionResponseHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.error(e.getMessage()));
     } //"비밀번호가 일치하지 않습니다."
 
+    
     /*
      HttpStatus.UNAUTHORIZED : 401
      토큰 오류

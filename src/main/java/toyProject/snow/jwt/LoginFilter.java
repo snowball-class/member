@@ -66,16 +66,17 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         String memberType = auth.getAuthority();
 
         // 토큰 생성
-        String accessToken = jwtUtil.createJwt("access", memberUUID, email, memberType, 6000000L);
+        String accessToken = "Bearer " + jwtUtil.createJwt("access", memberUUID, email, memberType, 6000000L);
         String refreshToken = jwtUtil.createJwt("refresh", memberUUID, email, memberType, 86400000L);
 
         // refresh 토큰 DB 저장
         saveRefreshTokenEntity(memberUUID, refreshToken, 86400000L);
 
         // 응답 생성
-        response.setHeader("access", accessToken);
+        response.setHeader("Authorization", accessToken);
         response.addCookie(createCookies("refresh", refreshToken));
         response.setStatus(HttpStatus.OK.value());
+        response.setContentType("application/json;charset=UTF-8");
         response.getWriter().write("{\"status\": 200, \n\"message\": login success}");
     }
 

@@ -36,13 +36,18 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
         // 헤더에서 access 키가 담긴 토큰 꺼내기
-        String accessToken = request.getHeader("access");
+        String accessToken = request.getHeader("Authorization");
 
 
         // 토큰이 없으면 다음 필터로
         if(accessToken == null){
             filterChain.doFilter(request, response);
             return;
+        }
+
+        // Bearer 제거
+        if(accessToken.startsWith("Bearer ")){
+            accessToken = accessToken.substring(7);
         }
 
         // 토큰 만료 여부 확인, 만료 시 다음 필터 넘기면 X
