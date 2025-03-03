@@ -12,7 +12,7 @@ import java.util.UUID;
 @Entity
 @Getter
 @Setter
-public class MemberEntity {
+public class member {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

@@ -12,7 +12,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import toyProject.snow.dto.CustomMemberDetails;
-import toyProject.snow.entity.MemberEntity;
+import toyProject.snow.entity.member;
 import toyProject.snow.entity.MemberType;
 
 import java.io.IOException;
@@ -75,12 +75,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String memberType = jwtUtil.getMemberType(accessToken);
         String email = jwtUtil.getEmail(accessToken);
 
-        MemberEntity memberEntity = new MemberEntity();
-        memberEntity.setMemberUUID(UUID.fromString(memberUUID));
-        memberEntity.setMemberType(MemberType.valueOf(memberType)); // -> 나중에 enum 수정해야할 듯
-        memberEntity.setEmail(email);
+        member member = new member();
+        member.setMemberUUID(UUID.fromString(memberUUID));
+        member.setMemberType(MemberType.valueOf(memberType)); // -> 나중에 enum 수정해야할 듯
+        member.setEmail(email);
 
-        CustomMemberDetails customMemberDetails = new CustomMemberDetails(memberEntity);
+        CustomMemberDetails customMemberDetails = new CustomMemberDetails(member);
 
         Authentication authToken = new UsernamePasswordAuthenticationToken(customMemberDetails, null, customMemberDetails.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(authToken);

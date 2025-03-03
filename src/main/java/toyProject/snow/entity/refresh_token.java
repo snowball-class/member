@@ -9,7 +9,7 @@ import java.util.UUID;
 @Entity
 @Getter
 @Setter
-public class RefreshTokenEntity {
+public class refresh_token {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

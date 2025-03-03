@@ -8,11 +8,10 @@ import toyProject.snow.dto.member.memberRequest.MemberUpdateRequest;
 import toyProject.snow.dto.member.memberResponse.MemberDeletetResponse;
 import toyProject.snow.dto.member.memberResponse.MemberInfoResponse;
 import toyProject.snow.dto.member.memberResponse.MemberUpdateResponse;
-import toyProject.snow.entity.MemberEntity;
+import toyProject.snow.entity.member;
 import toyProject.snow.handler.ExceptionResponseHandler;
 import toyProject.snow.repository.MemberRepository;
 
-import javax.swing.text.html.Option;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
@@ -32,17 +31,17 @@ public class MemberService {
     public MemberInfoResponse getMemberInfo(UUID memberUUID) {
         // 완전 전통적인 방식 vs record 방식.... 헹 너무 난이도 올리기 싫은데
 
-        Optional<MemberEntity> optionalMemberEntity = memberRepository.findByMemberUUID(memberUUID);
+        Optional<member> optionalMemberEntity = memberRepository.findByMemberUUID(memberUUID);
         if(!optionalMemberEntity.isPresent()){
             return new MemberInfoResponse(false);
         }
 
-        MemberEntity memberEntity = optionalMemberEntity.get();
+        member member = optionalMemberEntity.get();
 
-        String name = memberEntity.getName();
-        String nickname = memberEntity.getNickname();
-        String email =memberEntity.getEmail();
-        LocalDateTime joinDate = memberEntity.getJoinDate();
+        String name = member.getName();
+        String nickname = member.getNickname();
+        String email = member.getEmail();
+        LocalDateTime joinDate = member.getJoinDate();
 
         MemberInfoResponse memberInfoResponse = new MemberInfoResponse(true, name, nickname, email, joinDate);
 
@@ -61,7 +60,7 @@ public class MemberService {
     @Transactional
     public MemberUpdateResponse updateMember(UUID memberUUID, MemberUpdateRequest request) {
 
-        Optional<MemberEntity> optionalMemberEntity = memberRepository.findByMemberUUID(memberUUID);
+        Optional<member> optionalMemberEntity = memberRepository.findByMemberUUID(memberUUID);
 
 //        MemberEntity memberEntity = memberRepository.findByMemberUUID(memberUUID)
 //                .orElseThrow(() -> new IllegalArgumentException("해당 회원이 존재하지 않습니다."));
@@ -70,14 +69,14 @@ public class MemberService {
             return new MemberUpdateResponse(false);
         }
 
-        MemberEntity memberEntity = optionalMemberEntity.get();
+        member member = optionalMemberEntity.get();
 
-        if(!bCryptPasswordEncoder.matches(request.getPassword(), memberEntity.getPassword())){
+        if(!bCryptPasswordEncoder.matches(request.getPassword(), member.getPassword())){
             throw new ExceptionResponseHandler.passwordNotMatchException("비밀번호가 일치하지 않습니다.");
         }
 
-        memberEntity.setNickname(request.getNewNickname());
-        memberEntity.setPassword(bCryptPasswordEncoder.encode(request.getNewPassword()));
+        member.setNickname(request.getNewNickname());
+        member.setPassword(bCryptPasswordEncoder.encode(request.getNewPassword()));
 
         return new MemberUpdateResponse(true, request.getNewNickname());
     }

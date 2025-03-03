@@ -11,9 +11,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import toyProject.snow.dto.ApiResponse;
 import toyProject.snow.dto.CustomMemberDetails;
-import toyProject.snow.entity.RefreshTokenEntity;
+import toyProject.snow.entity.refresh_token;
 import toyProject.snow.repository.RefreshTokenRepository;
 
 import java.io.IOException;
@@ -84,12 +83,12 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
         Date date = new Date(System.currentTimeMillis() + expiredMs);
 
-        RefreshTokenEntity refreshTokenEntity = new RefreshTokenEntity();
-        refreshTokenEntity.setMemberUUID(UUID.fromString(memberUUID));
-        refreshTokenEntity.setRefreshToken(refreshToken);
-        refreshTokenEntity.setExpirationTime(date.toString());
+        refresh_token refreshtoken = new refresh_token();
+        refreshtoken.setMemberUUID(UUID.fromString(memberUUID));
+        refreshtoken.setRefreshToken(refreshToken);
+        refreshtoken.setExpirationTime(date.toString());
 
-        refreshTokenRepository.save(refreshTokenEntity);
+        refreshTokenRepository.save(refreshtoken);
     }
 
     //로그인 실패시 실행하는 메소드

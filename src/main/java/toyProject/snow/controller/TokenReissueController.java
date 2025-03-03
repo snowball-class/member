@@ -10,7 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import toyProject.snow.entity.RefreshTokenEntity;
+import toyProject.snow.entity.refresh_token;
 import toyProject.snow.jwt.JWTUtil;
 import toyProject.snow.repository.RefreshTokenRepository;
 
@@ -94,12 +94,12 @@ public class TokenReissueController {
 
         Date date = new Date(System.currentTimeMillis() + expiredMs);
 
-        RefreshTokenEntity refreshTokenEntity = new RefreshTokenEntity();
-        refreshTokenEntity.setMemberUUID(UUID.fromString(memberUUID));
-        refreshTokenEntity.setRefreshToken(refreshToken);
-        refreshTokenEntity.setExpirationTime(date.toString());
+        refresh_token refreshtoken = new refresh_token();
+        refreshtoken.setMemberUUID(UUID.fromString(memberUUID));
+        refreshtoken.setRefreshToken(refreshToken);
+        refreshtoken.setExpirationTime(date.toString());
 
-        refreshTokenRepository.save(refreshTokenEntity);
+        refreshTokenRepository.save(refreshtoken);
     }
 
     private Cookie createCookies(String key, String value) {

@@ -2,7 +2,7 @@ package toyProject.snow.dto;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import toyProject.snow.entity.MemberEntity;
+import toyProject.snow.entity.member;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -10,10 +10,10 @@ import java.util.UUID;
 
 public class CustomMemberDetails implements UserDetails {
 
-    private final MemberEntity memberEntity;
+    private final member member;
 
-    public CustomMemberDetails(MemberEntity memberEntity){
-        this.memberEntity = memberEntity;
+    public CustomMemberDetails(member member){
+        this.member = member;
     }
 
     @Override
@@ -25,24 +25,24 @@ public class CustomMemberDetails implements UserDetails {
             @Override
             public String getAuthority() {
 
-                return memberEntity.getMemberType().name();
+                return member.getMemberType().name();
             }
         });
         return collection;
     }
 
     public UUID getMemberUUID() {
-        return memberEntity.getMemberUUID();
+        return member.getMemberUUID();
     }
 
     @Override
     public String getPassword() {
-        return memberEntity.getPassword();
+        return member.getPassword();
     }
 
     @Override
     public String getUsername() {
-        return memberEntity.getEmail();
+        return member.getEmail();
     }
 
     @Override

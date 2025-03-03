@@ -1,23 +1,14 @@
 package toyProject.snow.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import toyProject.snow.dto.ApiResponse;
 import toyProject.snow.dto.CustomMemberDetails;
 import toyProject.snow.dto.member.memberRequest.MemberUpdateRequest;
-import toyProject.snow.entity.MemberEntity;
 import toyProject.snow.service.MemberService;
-
-
-import java.util.UUID;
 
 @Slf4j
 @Controller
