@@ -25,14 +25,14 @@ public class Controller_dummy {
 
     @Operation(summary = "로그인", description = "실제 로그인 처리는 /login 경로로 스프링 시큐리티 필터(LoginFilter)에서 처리")
     @PostMapping(value = "/login_dummy", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ApiResponse login(@RequestBody LoginRequest loginRequest){
+    public ApiResponse login(@ModelAttribute LoginRequest loginRequest){
         // 이 메서드는 Swagger에만 표시되며, 실제 로직은 필터에서 처리됩니다.
         return ApiResponse.success(loginRequest);
     }
 
     @Operation(summary = "로그아웃", description = "Swagger 문서 작성을 위한 더미. 실제 로그아웃 처리는 /logout 경로로 CustomLogoutFilter에서 처리")
     @PostMapping("/logout_dummy")
-    public ApiResponse logout(@RequestBody LoginRequest loginRequest){
+    public ApiResponse logout(){
         // 이 메서드는 Swagger에만 표시되며, 실제 로직은 필터에서 처리됩니다.
         return ApiResponse.success(new LogoutResponse(true));
     }

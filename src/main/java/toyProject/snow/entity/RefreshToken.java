@@ -15,8 +15,10 @@ public class RefreshToken {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private UUID memberUUID;
     @Column(name = "refresh_token", columnDefinition = "TEXT")
     private String refreshToken;
+    @Column(nullable = false)
     private String expirationTime;
 }

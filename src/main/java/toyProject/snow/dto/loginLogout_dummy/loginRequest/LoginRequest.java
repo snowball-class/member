@@ -8,15 +8,15 @@ import lombok.Setter;
 @Setter
 public class LoginRequest {
 
-    @Schema(description = "이메일", example = "gildong@naver.com")
-    private String email;
+    @Schema(description = "email", example = "gildong@naver.com")
+    private String username;
     @Schema(description = "비밀번호", example = "1234")
     private String password;
 
     public LoginRequest(){
     }
-    public LoginRequest(String email, String password){
-        this.email = email;
+    public LoginRequest(String username, String password){
+        this.username = username;
         this.password = password;
     }
 }
