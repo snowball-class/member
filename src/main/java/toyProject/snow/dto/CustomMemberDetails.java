@@ -2,7 +2,7 @@ package toyProject.snow.dto;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import toyProject.snow.entity.member;
+import toyProject.snow.entity.Member;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -10,9 +10,9 @@ import java.util.UUID;
 
 public class CustomMemberDetails implements UserDetails {
 
-    private final member member;
+    private final Member member;
 
-    public CustomMemberDetails(member member){
+    public CustomMemberDetails(Member member){
         this.member = member;
     }
 

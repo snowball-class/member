@@ -10,15 +10,13 @@ spring:
     name: snow # 남주님 설정
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://43.203.119.187:3306/snowball?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
-    username: snowball
-    password: 1234
+    url: ${db-address}
+    username: ${db-username}
+    password: ${db-password}
   jpa:
-    database: mysql
+    database: ${db-type}
     hibernate:
       ddl-auto: update
-      naming:
-        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl # 남주님 설정
     show-sql: true
     properties:
       hibernate.format_sql: true

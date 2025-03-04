@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import toyProject.snow.dto.join.joinRequest.JoinRequest;
 import toyProject.snow.dto.join.joinResponse.JoinResponse;
-import toyProject.snow.entity.member;
+import toyProject.snow.entity.Member;
 import toyProject.snow.entity.MemberType;
 import toyProject.snow.handler.ExceptionResponseHandler;
 import toyProject.snow.repository.MemberRepository;
@@ -40,7 +40,7 @@ public class JoinService {
             throw new ExceptionResponseHandler.NickNameDuplicatedException("이미 사용중인 닉네임입니다.");
         }
 
-        member newMember = new member();
+        Member newMember = new Member();
         newMember.setName(name);
         newMember.setNickname(nickname);
         newMember.setEmail(email);

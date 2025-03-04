@@ -8,7 +8,7 @@ import toyProject.snow.dto.member.memberRequest.MemberUpdateRequest;
 import toyProject.snow.dto.member.memberResponse.MemberDeletetResponse;
 import toyProject.snow.dto.member.memberResponse.MemberInfoResponse;
 import toyProject.snow.dto.member.memberResponse.MemberUpdateResponse;
-import toyProject.snow.entity.member;
+import toyProject.snow.entity.Member;
 import toyProject.snow.handler.ExceptionResponseHandler;
 import toyProject.snow.repository.MemberRepository;
 
@@ -31,12 +31,12 @@ public class MemberService {
     public MemberInfoResponse getMemberInfo(UUID memberUUID) {
         // 완전 전통적인 방식 vs record 방식.... 헹 너무 난이도 올리기 싫은데
 
-        Optional<member> optionalMemberEntity = memberRepository.findByMemberUUID(memberUUID);
+        Optional<Member> optionalMemberEntity = memberRepository.findByMemberUUID(memberUUID);
         if(!optionalMemberEntity.isPresent()){
             return new MemberInfoResponse(false);
         }
 
-        member member = optionalMemberEntity.get();
+        Member member = optionalMemberEntity.get();
 
         String name = member.getName();
         String nickname = member.getNickname();
@@ -60,7 +60,7 @@ public class MemberService {
     @Transactional
     public MemberUpdateResponse updateMember(UUID memberUUID, MemberUpdateRequest request) {
 
-        Optional<member> optionalMemberEntity = memberRepository.findByMemberUUID(memberUUID);
+        Optional<Member> optionalMemberEntity = memberRepository.findByMemberUUID(memberUUID);
 
 //        MemberEntity memberEntity = memberRepository.findByMemberUUID(memberUUID)
 //                .orElseThrow(() -> new IllegalArgumentException("해당 회원이 존재하지 않습니다."));
@@ -69,7 +69,7 @@ public class MemberService {
             return new MemberUpdateResponse(false);
         }
 
-        member member = optionalMemberEntity.get();
+        Member member = optionalMemberEntity.get();
 
         if(!bCryptPasswordEncoder.matches(request.getPassword(), member.getPassword())){
             throw new ExceptionResponseHandler.passwordNotMatchException("비밀번호가 일치하지 않습니다.");

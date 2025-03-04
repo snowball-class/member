@@ -5,7 +5,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import toyProject.snow.dto.CustomMemberDetails;
-import toyProject.snow.entity.member;
+import toyProject.snow.entity.Member;
 import toyProject.snow.repository.MemberRepository;
 
 @Service
@@ -20,7 +20,7 @@ public class CustomMemberDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 
-        member member = memberRepository.findByEmail(email);
+        Member member = memberRepository.findByEmail(email);
 
         if(member != null){
             return new CustomMemberDetails(member);

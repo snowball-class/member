@@ -12,7 +12,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import toyProject.snow.dto.CustomMemberDetails;
-import toyProject.snow.entity.refresh_token;
+import toyProject.snow.entity.RefreshToken;
 import toyProject.snow.repository.RefreshTokenRepository;
 
 import java.io.IOException;
@@ -84,7 +84,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
         Date date = new Date(System.currentTimeMillis() + expiredMs);
 
-        refresh_token refreshtoken = new refresh_token();
+        RefreshToken refreshtoken = new RefreshToken();
         refreshtoken.setMemberUUID(UUID.fromString(memberUUID));
         refreshtoken.setRefreshToken(refreshToken);
         refreshtoken.setExpirationTime(date.toString());
