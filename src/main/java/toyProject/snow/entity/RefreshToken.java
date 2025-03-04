@@ -16,7 +16,7 @@ public class RefreshToken {
     private Long id;
 
     private UUID memberUUID;
-    @Column(name = "refreshToken", columnDefinition = "TEXT")
+    @Column(name = "refresh_token", columnDefinition = "TEXT")
     private String refreshToken;
     private String expirationTime;
 }
