@@ -64,7 +64,7 @@ public class SecurityConfig {
 
         // csrf disable : session에서는 session이 stateful 상태라 csrf 방어해 줘야함. jwt 방식은 stateless라 방어 필요 없음
         http
-                .cors(cors -> cors.configurationSource(corsConfigurationSource())) // 🔥 직접 설정
+                .cors(cors -> cors.configurationSource(corsConfigurationSource())) // 직접 설정
                 .csrf((auth) -> auth.disable());
 
         // From 로그인 방식 disable : jwt 로그인 방식이라서

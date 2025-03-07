@@ -38,8 +38,8 @@ public class ExceptionResponseHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.error(e.getMessage()));
     } //"이미 사용중인 닉네임입니다."
 
-    @ExceptionHandler({passwordNotMatchException.class})
-    public ResponseEntity<ApiResponse> handlepasswordNotMatchException(passwordNotMatchException e){
+    @ExceptionHandler({PasswordNotMatchException.class})
+    public ResponseEntity<ApiResponse> handlepasswordNotMatchException(PasswordNotMatchException e){
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.error(e.getMessage()));
     } //"비밀번호가 일치하지 않습니다."
 
@@ -77,8 +77,8 @@ public class ExceptionResponseHandler {
         }
     }
 
-    public static class passwordNotMatchException extends RuntimeException {
-        public passwordNotMatchException(String message) {
+    public static class PasswordNotMatchException extends RuntimeException {
+        public PasswordNotMatchException(String message) {
             super(message);
         }
     }

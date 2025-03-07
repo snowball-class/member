@@ -45,9 +45,6 @@ public class MemberController {
       회원정보수정
     */
     @Operation(summary = "회원정보수정")
-    @Parameter(name = "newNickname", description = "새 닉네임", required = true)
-    @Parameter(name = "password", description = "현재 비밀번호", required = true)
-    @Parameter(name = "newPassword", description = "새 비밀번호", required = true)
     @PutMapping
     public ApiResponse updateMember(@AuthenticationPrincipal CustomMemberDetails member, @RequestBody MemberUpdateRequest request){
         return ApiResponse.success(memberService.updateMember(member.getMemberUUID(), request));

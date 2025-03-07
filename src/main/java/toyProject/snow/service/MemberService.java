@@ -60,19 +60,16 @@ public class MemberService {
     @Transactional
     public MemberUpdateResponse updateMember(UUID memberUUID, MemberUpdateRequest request) {
 
-        Optional<Member> optionalMemberEntity = memberRepository.findByMemberUUID(memberUUID);
+        Optional<Member> optionalMember = memberRepository.findByMemberUUID(memberUUID);
 
-//        MemberEntity memberEntity = memberRepository.findByMemberUUID(memberUUID)
-//                .orElseThrow(() -> new IllegalArgumentException("해당 회원이 존재하지 않습니다."));
-
-        if(!optionalMemberEntity.isPresent()){
+        if(!optionalMember.isPresent()){
             return new MemberUpdateResponse(false);
         }
 
-        Member member = optionalMemberEntity.get();
+        Member member = optionalMember.get();
 
         if(!bCryptPasswordEncoder.matches(request.getPassword(), member.getPassword())){
-            throw new ExceptionResponseHandler.passwordNotMatchException("비밀번호가 일치하지 않습니다.");
+            throw new ExceptionResponseHandler.PasswordNotMatchException("비밀번호가 일치하지 않습니다.");
         }
 
         member.setNickname(request.getNewNickname());
