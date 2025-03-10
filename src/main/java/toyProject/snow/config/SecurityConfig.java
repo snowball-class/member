@@ -81,7 +81,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests((auth) -> auth
                         .requestMatchers("OPTIONS", "/**").permitAll() // cors 용
                         .requestMatchers("/login", "/", "/join").permitAll()
-                        .requestMatchers( "/swagger-ui/**", "/v3/**").permitAll()
+                        .requestMatchers("/swagger-ui/**", "/v3/**").permitAll()
                         .requestMatchers("/login_dummy", "/logout_dummy", "/dummmy/member").permitAll()
 //                        .requestMatchers("/admin").hasRole("ADMIN")
                         .requestMatchers("/reissue").permitAll()

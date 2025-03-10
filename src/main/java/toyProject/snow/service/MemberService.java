@@ -29,7 +29,6 @@ public class MemberService {
 
     @Transactional(readOnly = true)
     public MemberInfoResponse getMemberInfo(UUID memberUUID) {
-        // 완전 전통적인 방식 vs record 방식.... 헹 너무 난이도 올리기 싫은데
 
         Optional<Member> optionalMemberEntity = memberRepository.findByMemberUUID(memberUUID);
         if(!optionalMemberEntity.isPresent()){
@@ -43,7 +42,7 @@ public class MemberService {
         String email = member.getEmail();
         LocalDateTime joinDate = member.getJoinDate();
 
-        MemberInfoResponse memberInfoResponse = new MemberInfoResponse(true, name, nickname, email, joinDate);
+        MemberInfoResponse memberInfoResponse = new MemberInfoResponse(true, memberUUID, name, nickname, email, joinDate);
 
         return memberInfoResponse;
     }
