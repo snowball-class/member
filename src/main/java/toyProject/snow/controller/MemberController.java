@@ -49,4 +49,13 @@ public class MemberController {
     public ApiResponse updateMember(@AuthenticationPrincipal CustomMemberDetails member, @RequestBody MemberUpdateRequest request){
         return ApiResponse.success(memberService.updateMember(member.getMemberUUID(), request));
     }
+
+    /*
+      임시비밀번호발급
+    */
+    @Operation(summary = "임시비밀번호발급")
+    @GetMapping("/temporary-password")
+    public ApiResponse generateTemporaryPassword(@AuthenticationPrincipal CustomMemberDetails member){
+        return ApiResponse.success("임시 비밀번호 전송 성공", memberService.generateTemporaryPassword(member.getMemberUUID()));
+    }
 }
