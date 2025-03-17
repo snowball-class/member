@@ -7,22 +7,33 @@ logging:
 
 spring:
   application:
-    name: snow # 남주님 설정
+    name:   # 남주님 설정
   datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: ${db-address}
-    username: ${db-username}
-    password: ${db-password}
+    driver-class-name:
+    url:
+    username:
+    password:
   jpa:
-    database: ${db-type}
+    database:
     hibernate:
-      ddl-auto: update
+      ddl-auto:
     show-sql: true
     properties:
       hibernate.format_sql: true
       dialect: org.hibernate.dialect.MySQL8InnoDBDialect
   jwt:
     secret: tmvmfldtlzbflxlfhrmdlsrnguswndspringsecuritylogincodeimplementmakingsecretkey # 남주님 설정
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: njook2501@gmail.com  # 발신자 (보내는 이메일)
+    password: sntqjhdvhkgpmxpk  # 앱 비밀번호
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
 
 # swagger 관련 설정
 springdoc:
