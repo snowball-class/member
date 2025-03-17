@@ -6,6 +6,9 @@ import io.jsonwebtoken.MalformedJwtException;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.MailAuthenticationException;
+import org.springframework.mail.MailException;
+import org.springframework.mail.MailSendException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -24,8 +27,8 @@ public class ExceptionResponseHandler {
     }
 
     /*
-     커스텀 예외
-     회원가입 중복관련
+     커스텀 예외,
+     회원가입 중복관련,
      중복된 이메일
      */
     @ExceptionHandler({EmailDuplicatedException.class})
@@ -62,6 +65,15 @@ public class ExceptionResponseHandler {
     public ResponseEntity<ApiResponse> handleExpiredTokenException(){
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ApiResponse.error("토큰이 만료되었습니다."));
     }
+    
+    /*
+     (메일전송실패)비밀번호찾기관련
+    */
+    @ExceptionHandler({MailException.class})
+    public ResponseEntity<ApiResponse> handleTempEmailException(Exception e){
+        return ResponseEntity.badRequest().body(ApiResponse.error("이메일 전송 실패"));
+    }
+
 
 
     // 커스텀 예외 정의
